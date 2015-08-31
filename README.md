@@ -4,7 +4,7 @@ Scans all running applications on a host to identify those using a shared librar
 
 This application works on UNIX-derived systems (Linux, BSD, etc). You can use it, for example, to scan for processes using a certain version of a shared library, or running under a certain interpreter. It can print a summarized view, or optionally print all matching mappings as well.
 
-This could be paired with https://github.com/kata198/remote\_copy\_and\_execute to do audits of running software/library usage across many machines on a network.
+This could be paired with https://github.com/kata198/remote_copy_and_execute to do audits of running software/library usage across many machines on a network.
 
 
 You must be root to scan all running processes, otherwise this will only scan that which is running under your current user.
