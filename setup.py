@@ -13,15 +13,15 @@ if __name__ == '__main__':
         long_description = ''
 
     setup(name='findProcessesUsing',
-            version='1.0',
+            version='2.0',
             author='Tim Savannah',
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
             scripts=['findProcessesUsing'],
-            install_requires=['ProcessMappingScanner'],
+            install_requires=['ProcessMappingScanner>1.0'],
             url='https://github.com/kata198/findProcessesUsing',
             maintainer_email='kata198@gmail.com',
-            description='Application which scans running processes on the system for a given mapping (executable, shared object, etc)',
+            description='Application which scans running processes on the system for given mappings (shared libraries, executables) or open file descriptors',
             long_description=long_description,
             license='LGPLv3',
             keywords=['find', 'process', 'using', 'so', 'mapping', 'scanner', 'unix', 'proc', 'mappings', 'lib', 'detect', 'executable', 'shared', 'object'],
