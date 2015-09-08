@@ -24,6 +24,7 @@ Usage
 		   -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
 		   -e or --exact          Require exact match. Default is to allow partial matches
 		   -f                     Scan for open files instead of mappings. This should not be a symbolic link.
+		   --version              Print the version
 
 
 	Examples:

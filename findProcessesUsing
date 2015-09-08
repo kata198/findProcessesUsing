@@ -13,8 +13,15 @@ import sys
 
 import ProcessMappingScanner
 
+__version__ = '2.0.1'
+
 
 if __name__ == '__main__':
+
+    if '--version' in sys.argv:
+        sys.stdout.write('findProcessesUsing version %s by Tim Savannah\n' %(__version__,))
+        sys.exit(0)
+
     if '-f' in sys.argv:
         isFileScan = True
         sys.argv.remove('-f')
@@ -41,6 +48,7 @@ Mappings include running executables (like python), or a shared library, or a de
        -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
        -e or --exact          Require exact match. Default is to allow partial matches
        -f                     Scan for open files instead of mappings. This should not be a symbolic link.
+       --version              Print the version
 
 
 Examples: 
