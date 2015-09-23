@@ -8,7 +8,7 @@ This application works on UNIX-derived systems (Linux, BSD, cygwin, etc). You ca
 
 This application can also scan for open files, either fully qualified or partially qualified.
 
-This could be paired with https://github.com/kata198/remote_copy_and_execute to do audits of running software/library usage across many machines on a network.
+This could be paired with  https://pypi.python.org/pypi/remote_copy_and_execute  to do audits of running software/library usage across many machines on a network.
 
 
 You must be root to scan all running processes, otherwise this will only scan that which is running under your current user.
