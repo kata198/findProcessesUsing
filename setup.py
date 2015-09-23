@@ -13,7 +13,7 @@ if __name__ == '__main__':
         long_description = ''
 
     setup(name='findProcessesUsing',
-            version='2.1.0',
+            version='2.1.1',
             author='Tim Savannah',
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
@@ -24,7 +24,7 @@ if __name__ == '__main__':
             description='Application which scans running processes on the system for given mappings (shared libraries, executables) or open file descriptors',
             long_description=long_description,
             license='LGPLv3',
-            keywords=['find', 'process', 'using', 'so', 'mapping', 'scanner', 'unix', 'proc', 'mappings', 'lib', 'detect', 'executable', 'shared', 'object'],
+            keywords=['find', 'process', 'using', 'file', 'files', 'so', 'mapping', 'scanner', 'unix', 'proc', 'mappings', 'lib', 'detect', 'executable', 'shared', 'object'],
             classifiers=['Development Status :: 5 - Production/Stable',
                          'Programming Language :: Python',
                          'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',

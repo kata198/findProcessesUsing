@@ -18,22 +18,22 @@ You must be root to scan all running processes, otherwise this will only scan th
 
 	Usage: findProcessesUsing (options) [search portion]
 
-	Searches all running processes for those containing a given mapping, or an open file (with -f).
+	Searches all running processes for those containing a given mapping, or an open file (with \-f).
 
 	Mappings include running executables (like python), or a shared library, or a device.
 
 
 		Options:
 
-			-v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
+			\-v or \-\-verbose        Also print mapping lines containing the given pattern, or matched filenames when given \-f.
 
-			-e or --exact          Require exact match. Default is to allow partial matches
+			\-e or \-\-exact          Require exact match. Default is to allow partial matches
 
-			-p or --pids-only      Only print pids, one per line
+			\-p or \-\-pids-only      Only print pids, one per line
 
-			-f                     Scan for open files instead of mappings. This should not be a symbolic link.
+			\-f                     Scan for open files instead of mappings. This should not be a symbolic link.
 
-			--version              Print the version
+			\-\-version              Print the version
 
 
 
@@ -41,7 +41,7 @@ You must be root to scan all running processes, otherwise this will only scan th
 
 	  findProcessesUsing libpython2.7             # Scan for any processes linking against anything containing "libpython2.7"
 
-	  findProcessesUsing -f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
+	  findProcessesUsing \-f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
 
 
 
