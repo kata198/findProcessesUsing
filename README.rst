@@ -25,13 +25,15 @@ You must be root to scan all running processes, otherwise this will only scan th
 
 		Options:
 
-		   -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
+			-v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
 
-		   -e or --exact          Require exact match. Default is to allow partial matches
+			-e or --exact          Require exact match. Default is to allow partial matches
 
-		   -f                     Scan for open files instead of mappings. This should not be a symbolic link.
+			-p or --pids-only      Only print pids, one per line
 
-		   --version              Print the version
+			-f                     Scan for open files instead of mappings. This should not be a symbolic link.
+
+			--version              Print the version
 
 
 

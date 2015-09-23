@@ -1,3 +1,6 @@
+* 2.1.0 (Sep 23  2015)
+- Add ability to specify --pids-only to only see pids, one per line
+
 * 2.0.1 (Sep 8 2015)
 - Add ability to scan for file descriptors as well as mappings
 - Add ability to specify using partial or exact matches during scans

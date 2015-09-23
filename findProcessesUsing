@@ -13,64 +13,84 @@ import sys
 
 import ProcessMappingScanner
 
-__version__ = '2.0.1'
+__version__ = '2.1.0'
 
+def printUsage():
+    sys.stderr.write('''Usage: findProcessesUsing (options) [search portion]
+
+Searches all running processes for those containing a given mapping, or an open file (with -f). 
+Mappings include running executables (like python), or a shared library, or a device.
+
+Options:
+
+   -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
+   -e or --exact          Require exact match. Default is to allow partial matches
+   -p or --pids-only      Only print pids, one per line
+   -f                     Scan for open files instead of mappings. This should not be a symbolic link.
+   --version              Print the version
+
+
+Examples: 
+findProcessesUsing libpython2.7             # Scan for any processes linking against anything containing "libpython2.7"
+findProcessesUsing -f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
+
+
+It is recommended to run this process as root, otherwise you are only able to scan your own processes.
+''')
 
 if __name__ == '__main__':
 
-    if '--version' in sys.argv:
+    args = set(sys.argv[1:])
+
+    if '--version' in args:
         sys.stdout.write('findProcessesUsing version %s by Tim Savannah\n' %(__version__,))
         sys.exit(0)
 
-    if '-f' in sys.argv:
+    if '--help' in sys.argv:
+        printUsage()
+        sys.exit(0)
+
+    if '-f' in args:
         isFileScan = True
         sys.argv.remove('-f')
     else:
         isFileScan = False
 
-    if '-e' in sys.argv:
+    if '-e' in args:
         isExact = True
         sys.argv.remove('-e')
-    elif '--exact' in sys.argv:
+    elif '--exact' in args:
         isExact = True
         sys.argv.remove('--exact')
     else:
         isExact = False
 
-    if len(sys.argv) not in (2, 3) or '--help' in sys.argv:
-        sys.stderr.write('''Usage: findProcessesUsing (options) [search portion]
 
-Searches all running processes for those containing a given mapping, or an open file (with -f). 
-Mappings include running executables (like python), or a shared library, or a device.
+    isVerbose = False
+    isPidsOnly =  False
 
-    Options:
+    for verboseOption in ('-v', '--verbose'):
+        if verboseOption in args:
+            isVerbose = True
+            sys.argv.remove(verboseOption)
+            break
+    for pidsOnlyOption in ('-p', '--pids-only'):
+        if pidsOnlyOption in args:
+            isPidsOnly = True
+            sys.argv.remove(pidsOnlyOption)
+            break
 
-       -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
-       -e or --exact          Require exact match. Default is to allow partial matches
-       -f                     Scan for open files instead of mappings. This should not be a symbolic link.
-       --version              Print the version
+    if len(sys.argv) != 2:
+        sys.stderr.write('Invalid Arguments\n\n')
+        printUsage()
+        sys.exit(1)
 
-
-Examples: 
-  findProcessesUsing libpython2.7             # Scan for any processes linking against anything containing "libpython2.7"
-  findProcessesUsing -f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
-
- 
-It is recommended to run this process as root, otherwise you are only able to scan your own processes.
-''')
+    if isPidsOnly and isVerbose:
+        sys.stderr.write('Cannot specify both pids-only and verbose\n')
         sys.exit(1)
 
     if os.getuid() != 0:
         sys.stderr.write('Warning: You are not root. Results will only contain processes for which you are the owner.\n\n')
-
-
-    isVerbose = False
-
-    for verboseOption in ('-v', '--verbose'):
-        if verboseOption in sys.argv:
-            isVerbose = True
-            sys.argv.remove(verboseOption)
-            break
 
     searchPortion = sys.argv[1]
 
@@ -80,18 +100,24 @@ It is recommended to run this process as root, otherwise you are only able to sc
         scanResults = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExact)
 
     pids = scanResults.keys()
-    for pid in pids:
-        result = scanResults[pid]
-        if isFileScan is False:
-            sys.stdout.write('Found %s in %d (%s) [ %s ]\n' %(searchPortion, result['pid'], result['owner'], result['cmdline']))
-            if isVerbose is True:
-                sys.stdout.write('\n'.join(["\t" + line for line in result['matchedMappings']]) + '\n\n')
-        else:
-            sys.stdout.write('Found %s {fd=%s} in %d (%s) [ %s ]\n' %(searchPortion, ','.join(result['fds']), result['pid'], result['owner'], result['cmdline']))
-            if isVerbose is True:
-                for i in range(len(result['filenames'])):
-                    (fd, filename) = (result['fds'][i], result['filenames'][i])
-                    sys.stdout.write('\n\t%4d = "%s"' %(int(fd), filename))
-                sys.stdout.write('\n\n')
+    if isPidsOnly:
+        if pids:
+            pids = [str(pid) for pid in pids]
+            sys.stdout.write('\n'.join(pids))
+            sys.stdout.write('\n')
+    else:
+        for pid in pids:
+            result = scanResults[pid]
+            if isFileScan is False:
+                sys.stdout.write('Found %s in %d (%s) [ %s ]\n' %(searchPortion, result['pid'], result['owner'], result['cmdline']))
+                if isVerbose is True:
+                    sys.stdout.write('\n'.join(["\t" + line for line in result['matchedMappings']]) + '\n\n')
+            else:
+                sys.stdout.write('Found %s {fd=%s} in %d (%s) [ %s ]\n' %(searchPortion, ','.join(result['fds']), result['pid'], result['owner'], result['cmdline']))
+                if isVerbose is True:
+                    for i in range(len(result['filenames'])):
+                        (fd, filename) = (result['fds'][i], result['filenames'][i])
+                        sys.stdout.write('\n\t%4d = "%s"' %(int(fd), filename))
+                    sys.stdout.write('\n\n')
 
 
