@@ -13,7 +13,7 @@ if __name__ == '__main__':
         long_description = ''
 
     setup(name='findProcessesUsing',
-            version='2.0.1',
+            version='2.1.0',
             author='Tim Savannah',
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
