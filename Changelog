@@ -1,3 +1,6 @@
+* 2.1.2 (Oct 15  2015)
+- Fixup description
+
 * 2.1.0 (Sep 23  2015)
 - Add ability to specify --pids-only to only see pids, one per line
 
