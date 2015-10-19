@@ -8,14 +8,14 @@ if __name__ == '__main__':
 
     summary = 'Application which scans running processes on the system for given mappings (shared libraries, executables) or open file descriptors'
     try:
-        with open('README.rst', 'r') as f:
+        with open('README.rst', 'rt') as f:
             long_description = f.read()
     except Exception as e:
         sys.stderr.write('Exception reading long description: %s\n' %(str(e),))
         long_description = summary
 
     setup(name='findProcessesUsing',
-            version='2.1.2',
+            version='2.1.3',
             author='Tim Savannah',
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
