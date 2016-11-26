@@ -25,15 +25,21 @@ You must be root to scan all running processes, otherwise this will only scan th
 
 		Options:
 
+			\-f or \-\-files          Scan for open files instead of mappings. This should not be a symbolic link.
+
+
 			\-v or \-\-verbose        Also print mapping lines containing the given pattern, or matched filenames when given \-f.
 
 			\-e or \-\-exact          Require exact match. Default is to allow partial matches
 
 			\-p or \-\-pids-only      Only print pids, one per line
 
-			\-f                     Scan for open files instead of mappings. This should not be a symbolic link.
+
+			\-i or \-\-ignore-case    Search case-insensitively. By default, case must be an exact match.
+
 
 			\-\-version              Print the version
+			\-h or \-\-help           Display this message and quit
 
 
 
