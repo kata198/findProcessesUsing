@@ -15,12 +15,12 @@ if __name__ == '__main__':
         long_description = summary
 
     setup(name='findProcessesUsing',
-            version='2.1.3',
+            version='2.2.0',
             author='Tim Savannah',
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
             scripts=['findProcessesUsing'],
-            install_requires=['ProcessMappingScanner>1.0'],
+            install_requires=['ProcessMappingScanner>2.0.9'],
             requires=['ProcessMappingScanner'],
             url='https://github.com/kata198/findProcessesUsing',
             maintainer_email='kata198@gmail.com',
@@ -37,6 +37,7 @@ if __name__ == '__main__':
                           'Programming Language :: Python :: 3',
                           'Programming Language :: Python :: 3.3',
                           'Programming Language :: Python :: 3.4',
+                          'Programming Language :: Python :: 3.5',
             ]
     )
 
