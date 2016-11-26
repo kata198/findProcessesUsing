@@ -26,6 +26,7 @@ Options:
    -e or --exact          Require exact match. Default is to allow partial matches
    -p or --pids-only      Only print pids, one per line
    -f or --files          Scan for open files instead of mappings. This should not be a symbolic link.
+   -i or --ignore-case    Search case-insensitively. By default, case must be an exact match.
    --version              Print the version
    -h or --help           Display this message and quit
 
@@ -44,6 +45,7 @@ if __name__ == '__main__':
     isExactMatch = False
     isVerbose = False
     isPidsOnly = False
+    ignoreCase = False
 
 
     args = sys.argv[1:]
@@ -71,6 +73,9 @@ if __name__ == '__main__':
         elif arg in ('-p', '--pids-only'):
             isPidsOnly = True
             continue
+        elif arg in ('-i', '--ignore-case'):
+            ignoreCase = True
+            continue
         else:
             if searchPortion is not None:
                 sys.stderr.write('Too many / unknown argument: %s\n\n' %(arg,))
@@ -95,9 +100,9 @@ if __name__ == '__main__':
 
 
     if isFileScan is False:
-        scanResults = ProcessMappingScanner.scanAllProcessesForMapping(searchPortion, isExactMatch)
+        scanResults = ProcessMappingScanner.scanAllProcessesForMapping(searchPortion, isExactMatch, ignoreCase)
     else:
-        scanResults = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExactMatch)
+        scanResults = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExactMatch, ignoreCase)
 
     pids = scanResults.keys()
     if isPidsOnly:
