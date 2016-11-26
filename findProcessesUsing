@@ -10,7 +10,6 @@
 import os
 import sys
 
-
 import ProcessMappingScanner
 
 __version__ = '2.1.3'
@@ -26,8 +25,9 @@ Options:
    -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
    -e or --exact          Require exact match. Default is to allow partial matches
    -p or --pids-only      Only print pids, one per line
-   -f                     Scan for open files instead of mappings. This should not be a symbolic link.
+   -f or --files          Scan for open files instead of mappings. This should not be a symbolic link.
    --version              Print the version
+   -h or --help           Display this message and quit
 
 
 Examples: 
@@ -40,50 +40,51 @@ It is recommended to run this process as root, otherwise you are only able to sc
 
 if __name__ == '__main__':
 
-    args = set(sys.argv[1:])
+    isFileScan = False
+    isExactMatch = False
+    isVerbose = False
+    isPidsOnly = False
+
+
+    args = sys.argv[1:]
 
     if '--version' in args:
         sys.stdout.write('findProcessesUsing version %s by Tim Savannah\n' %(__version__,))
         sys.exit(0)
 
-    if '--help' in sys.argv:
+    if '--help' in args or '-h' in args or '-?' in args:
         printUsage()
         sys.exit(0)
 
-    if '-f' in args:
-        isFileScan = True
-        sys.argv.remove('-f')
-    else:
-        isFileScan = False
+    searchPortion = None
 
-    if '-e' in args:
-        isExact = True
-        sys.argv.remove('-e')
-    elif '--exact' in args:
-        isExact = True
-        sys.argv.remove('--exact')
-    else:
-        isExact = False
-
-
-    isVerbose = False
-    isPidsOnly =  False
-
-    for verboseOption in ('-v', '--verbose'):
-        if verboseOption in args:
+    for arg in args:
+        if arg in ('-f', '--files'):
+            isFileScan = True
+            continue
+        elif arg in ('-e', '--exact'):
+            isExactMatch = True
+            continue
+        elif arg in ('-v', '--verbose'):
             isVerbose = True
-            sys.argv.remove(verboseOption)
-            break
-    for pidsOnlyOption in ('-p', '--pids-only'):
-        if pidsOnlyOption in args:
+            continue
+        elif arg in ('-p', '--pids-only'):
             isPidsOnly = True
-            sys.argv.remove(pidsOnlyOption)
-            break
+            continue
+        else:
+            if searchPortion is not None:
+                sys.stderr.write('Too many / unknown argument: %s\n\n' %(arg,))
+                printUsage()
+                sys.exit(1)
 
-    if len(sys.argv) != 2:
-        sys.stderr.write('Invalid Arguments\n\n')
+            searchPortion = arg
+            
+
+    if not searchPortion:
+        sys.stderr.write('Missing search portion argument.\n\n')
         printUsage()
         sys.exit(1)
+        
 
     if isPidsOnly and isVerbose:
         sys.stderr.write('Cannot specify both pids-only and verbose\n')
@@ -92,12 +93,11 @@ if __name__ == '__main__':
     if os.getuid() != 0:
         sys.stderr.write('Warning: You are not root. Results will only contain processes for which you are the owner.\n\n')
 
-    searchPortion = sys.argv[1]
 
     if isFileScan is False:
-        scanResults = ProcessMappingScanner.scanAllProcessesForMapping(searchPortion, isExact)
+        scanResults = ProcessMappingScanner.scanAllProcessesForMapping(searchPortion, isExactMatch)
     else:
-        scanResults = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExact)
+        scanResults = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExactMatch)
 
     pids = scanResults.keys()
     if isPidsOnly:
