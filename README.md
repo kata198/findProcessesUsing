@@ -103,3 +103,7 @@ Scan for open file descriptor of pty
 			   2 = "/dev/pty2"
 			  31 = "/dev/pty2"
 
+Library
+-------
+
+findProcessesUsing is the frontend for the python library [ProcessMappingScanner]<https://github.com/kata198/ProcessMappingScanner|ProcessMappingScanner>. If you want to use the findProcessesMapping functionality within your application, you may consider using that library directly in lieu of parsing findProcessesMapping's output.
