@@ -1,6 +1,6 @@
 * 2.3.0
-- Add support for scanning cwd
-
+- Add support for scanning cwd (-c or --cwd)
+- Support multiple modes at same time ( like -f -c )
 
 * 2.2.0 (Nov 25 2016)
 - Add support for case-insensitive matching (-i or --ignore-case)
