@@ -14,28 +14,40 @@ You must be root to scan all running processes, otherwise this will only scan th
 
 Usage
 -----
+
+
 	Usage: findProcessesUsing (options) [search portion]
 
-	Searches all running processes for those containing a given mapping, or an open file (with -f).
+	Searches all running processes for those containing a given mapping, or an open file (with -f). 
 	Mappings include running executables (like python), or a shared library, or a device.
 
-		Options:
+	Options:
 
-			-f or --files          Scan for open files instead of mappings. This should not be a symbolic link.
+	 Modes:
 
-			-v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
-			-e or --exact          Require exact match. Default is to allow partial matches
-			-p or --pids-only      Only print pids, one per line
-			-i or --ignore-case    Search case-insensitively. By default, case must be an exact match.
+		-m or --mappings       Scan for mappings (default)
+		-c or --cwd            Scan for cwd
+		-f or --files          Scan for open files instead of mappings. This should not be a symbolic link.
 
-			--version              Print the version
-			-h or --help           Display this message and quit
+	 Modifiers:
+
+		-v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
+		-e or --exact          Require exact match. Default is to allow partial matches
+		-p or --pids-only      Only print pids, one per line
+		-i or --ignore-case    Search case-insensitively. By default, case must be an exact match.
+
+		--version              Print the version
+		-h or --help           Display this message and quit
 
 
-	Examples:
-	  findProcessesUsing libpython2.7             # Scan for any processes linking against anything containing "libpython2.7"
-	  findProcessesUsing -f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
 
+	NOTE: Multiple modes can be specified
+
+
+	Examples: 
+	findProcessesUsing libpython2.7             # Scan for any processes linking against anything containing "libpython2.7"
+	findProcessesUsing -f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
+	findProcessesUsing -f -c /mnt/otherdrive    # Scan for any process with a CWD or open file in "/mnt/otherdrive"
 
 	It is recommended to run this process as root, otherwise you are only able to scan your own processes.
 
@@ -52,6 +64,16 @@ Scan for mappings of libc
 	Found libc in 1062 (www) [ /usr/bin/httpd  ]
 	Found libc in 808 (frankl) [ /bin/sh /usr/bin/startx  ]
 	Found libc in 1065 (frankl) [ /usr/lib/tracker/tracker-miner-user-guides  ]
+
+
+Scan for any cwd or open file in "/mnt/otherdrive"
+
+	]$ sudo findProcessesUsing -f -c /mnt/otherdrive
+	Found /mnt/otherdrive {cwd=/mnt/otherdrive} in 2927 (tim) [ -/bin/bash  ]
+	Found /mnt/otherdrive {cwd=/mnt/otherdrive} in 3943 (root) [ bash  ]
+	Found /mnt/otherdrive {fd=3} in 19636 (root) [ vim z  ]
+	Found /mnt/otherdrive {cwd=/mnt/otherdrive} in 19636 (root) [ vim z  ]
+
 
 
 Scan for open file descriptor of pty
