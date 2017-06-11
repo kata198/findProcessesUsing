@@ -15,7 +15,7 @@ if __name__ == '__main__':
         long_description = summary
 
     setup(name='findProcessesUsing',
-            version='2.3.0',
+            version='2.3.2',
             author='Tim Savannah',
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
