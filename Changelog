@@ -1,3 +1,7 @@
+* 2.3.2 - Jun 11 2017
+- Remove "ignoreCase" field in cwd, which not supported
+
+
 * 2.3.0 - Jun 11 2017
 - Add support for scanning cwd (-c or --cwd)
 - Support multiple modes at same time ( like -f -c )

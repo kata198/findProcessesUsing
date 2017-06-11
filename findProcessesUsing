@@ -12,7 +12,7 @@ import sys
 
 import ProcessMappingScanner
 
-__version__ = '2.3.0'
+__version__ = '2.3.2'
 
 def printUsage():
     sys.stderr.write('''Usage: findProcessesUsing (options) [search portion]
