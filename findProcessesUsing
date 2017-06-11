@@ -138,7 +138,7 @@ if __name__ == '__main__':
         scanResultsFile = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExactMatch, ignoreCase)
         pids += list(scanResultsFile.keys())
     if isCwdScan is True:
-        scanResultsCwd = ProcessMappingScanner.scanAllProcessesForCwd(searchPortion, isExactMatch, ignoreCase)
+        scanResultsCwd = ProcessMappingScanner.scanAllProcessesForCwd(searchPortion, isExactMatch)
         pids += list(scanResultsCwd.keys())
 
     pids = list(set(pids))
