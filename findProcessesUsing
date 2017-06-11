@@ -22,9 +22,13 @@ Mappings include running executables (like python), or a shared library, or a de
 
 Options:
 
+ Modes:
+
    -m or --mappings       Scan for mappings (default)
    -c or --cwd            Scan for cwd
    -f or --files          Scan for open files instead of mappings. This should not be a symbolic link.
+
+ Modifiers:
 
    -v or --verbose        Also print mapping lines containing the given pattern, or matched filenames when given -f.
    -e or --exact          Require exact match. Default is to allow partial matches
@@ -35,10 +39,14 @@ Options:
    -h or --help           Display this message and quit
 
 
+
+NOTE: Multiple modes can be specified
+
+
 Examples: 
 findProcessesUsing libpython2.7             # Scan for any processes linking against anything containing "libpython2.7"
 findProcessesUsing -f /var/lib/data.db      # Scan for any processes with an open handle to "/var/lib/data.db"
-
+findProcessesUsing -f -c /mnt/otherdrive    # Scan for any process with a CWD or open file in "/mnt/otherdrive"
 
 It is recommended to run this process as root, otherwise you are only able to scan your own processes.
 ''')
@@ -98,10 +106,10 @@ if __name__ == '__main__':
 
     numModes = int(isFileScan) + int(isCwdScan) + int(isMappingScan)
 
-    if numModes > 1:
-        sys.stderr.write('Multiple modes listed. Only one at a time is supported.\n\n')
-        printUsage()
-        sys.exit(1)
+#    if numModes > 1:
+#        sys.stderr.write('Multiple modes listed. Only one at a time is supported.\n\n')
+#        printUsage()
+#        sys.exit(1)
 
     # Default mode - mapping scan
     if numModes == 0:
@@ -121,37 +129,41 @@ if __name__ == '__main__':
         sys.stderr.write('Warning: You are not root. Results will only contain processes for which you are the owner.\n\n')
 
 
-    if isMappingScan is True:
-        scanResults = ProcessMappingScanner.scanAllProcessesForMapping(searchPortion, isExactMatch, ignoreCase)
-    elif isFileScan is True:
-        scanResults = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExactMatch, ignoreCase)
-    else: #isCwdScan
-        scanResults = ProcessMappingScanner.scanAllProcessesForCwd(searchPortion, isExactMatch, ignoreCase)
-            
+    pids = []
 
-    pids = list(scanResults.keys())
+    if isMappingScan is True:
+        scanResultsMapping = ProcessMappingScanner.scanAllProcessesForMapping(searchPortion, isExactMatch, ignoreCase)
+        pids += list(scanResultsMapping.keys())
+    if isFileScan is True:
+        scanResultsFile = ProcessMappingScanner.scanAllProcessesForOpenFile(searchPortion, isExactMatch, ignoreCase)
+        pids += list(scanResultsFile.keys())
+    if isCwdScan is True:
+        scanResultsCwd = ProcessMappingScanner.scanAllProcessesForCwd(searchPortion, isExactMatch, ignoreCase)
+        pids += list(scanResultsCwd.keys())
+
+    pids = list(set(pids))
+    pids.sort()
+
     if isPidsOnly:
         if pids:
             pids = [str(pid) for pid in pids]
             sys.stdout.write('\n'.join(pids))
             sys.stdout.write('\n')
     else:
-        if isMappingScan is True:
-            for pid in pids:
-                result = scanResults[pid]
+        for pid in pids:
+            if isMappingScan is True and pid in scanResultsMapping:
+                result = scanResultsMapping[pid]
                 sys.stdout.write('Found %s in %d (%s) [ %s ]\n' %(searchPortion, result['pid'], result['owner'], result['cmdline']))
                 if isVerbose is True:
                     sys.stdout.write('\n'.join(["\t" + line for line in result['matchedMappings']]) + '\n\n')
-        elif isFileScan is True:
-            for pid in pids:
-                result = scanResults[pid]
+            if isFileScan is True and pid in scanResultsFile:
+                result = scanResultsFile[pid]
                 sys.stdout.write('Found %s {fd=%s} in %d (%s) [ %s ]\n' %(searchPortion, ','.join(result['fds']), result['pid'], result['owner'], result['cmdline']))
                 if isVerbose is True:
                     for i in range(len(result['filenames'])):
                         (fd, filename) = (result['fds'][i], result['filenames'][i])
                         sys.stdout.write('\n\t%4d = "%s"' %(int(fd), filename))
                     sys.stdout.write('\n\n')
-        else: #isCwdScan
-            for pid in pids:
-                result = scanResults[pid]
+            if isCwdScan is True and pid in scanResultsCwd:
+                result = scanResultsCwd[pid]
                 sys.stdout.write('Found %s {cwd=%s} in %d (%s) [ %s ]\n' %(searchPortion, result['cwd'], result['pid'], result['owner'], result['cmdline']))
