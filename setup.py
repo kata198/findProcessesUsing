@@ -20,7 +20,7 @@ if __name__ == '__main__':
             author_email='kata198@gmail.com',
             maintainer='Tim Savannah',
             scripts=['findProcessesUsing'],
-            install_requires=['ProcessMappingScanner>2.0.9'],
+            install_requires=['ProcessMappingScanner>=2.2.2'],
             requires=['ProcessMappingScanner'],
             url='https://github.com/kata198/findProcessesUsing',
             maintainer_email='kata198@gmail.com',
